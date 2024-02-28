@@ -65,12 +65,24 @@ In main function bx is compared to FFFF. As we found out in the second function 
 
 Func1 return address is at 0FFFCh and buffer begins at address 03A3h. So, I have to put $0FFFC - 03A3 = FC59 = 64601$ empty bytes and "D3 B3 0D", where "D3 B3" is 0121h ($D3 + 4E = 21$, $B3 + 4E = 01$, 4E is cipher shift and they are put in reverse order because of little-endian) and 0D - end of the input.
 
-Genereting this [byte sequence](/assets/InFiles/input) with [code](/Src/StackOverflow.cpp):
+Genereting this [byte sequence](/assets/InFiles/input) with [code](/Src/Overflow/StackOverflow.cpp):
 ![verification stack overflow](/assets/imgs/img8.png)
 
 
 ## Cracking
+Cracking is pretty simple - all I need is to give me right permission all the time. There can be different ways of doing this:
+- I can delete all reading password functions and also delete denying part (change them to nop)
+- Replace func call before comparing bx and FFFFh with mov bx, FFFFh (change call 142h on mov bx, FFFh) ![call](/assets/imgs/img7.png)
+- Delete setting mov to 0 in func2 ![setting to 0](/assets/imgs/img3.png)
 
+I'll take option 3 - in my opinion it's better to not to delete some function calls because in real life cases they could be called more than once (I can forget to delete one of them) or can do more that just checking the password. So it's preferebly to change function2. Let's do it. 
+
+Code, that I would like to delete start at byte 55 and ends at byte 58 as I can see in Qview:
+![Qview](/assets/imgs/img9.png)
+All I need is to change these bytes to 3 nops with this [code](/Src/Crack/Crack.cpp). Result:
+![Cracked](/assets/imgs/img10.png)
+
+Now, I would like to add some fun stuff using SDL graphic lib. I'll add popular meme 'Vzlob kazino'.
 
 
 
