@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <assert.h>
 #include <SDL.h>
 
@@ -55,11 +56,14 @@ void ShowScreen()
     static const size_t width  = 512;
     static const size_t height = 211;
 
+    srand(time(NULL));
+
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window* window = SDL_CreateWindow("Casino", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
                                           width, height, SDL_WINDOW_SHOWN);
 
     SDL_Surface* tree  = SDL_LoadBMP("SDLAssets/imgs/Vzlom.bmp");
+    SDL_Surface* line  = SDL_LoadBMP("SDLAssets/imgs/line.bmp");
 
     if (!tree || !window)
         return;
@@ -71,10 +75,39 @@ void ShowScreen()
 
     SDL_BlitSurface(tree, NULL, window_surface, NULL);
 
+    SDL_Rect linepos;
+    linepos.x = 0;
+    linepos.y = 0;
+
     SDL_Event event;
     SDL_PollEvent(&event);
 
+    for (size_t i = 0; i < 160ul; ++i)
+    {
+        SDL_BlitSurface(line, NULL, window_surface, &linepos);
+
+        SDL_UpdateWindowSurface(window);
+        linepos.x += 1;
+
+        
+        SDL_Delay((rand() % 80) + 20);
+    }
+
+    for (size_t i = 0; i < 50ul; ++i)
+    {
+        SDL_BlitSurface(line, NULL, window_surface, &linepos);
+
+        SDL_UpdateWindowSurface(window);
+        linepos.x += 1;
+
+        SDL_Delay((rand() % 150) + 150);
+    }
+
+    //SDL_Event event;
+    //SDL_PollEvent(&event);
+
+
     SDL_UpdateWindowSurface(window);
 
-    SDL_Delay(5000);
+    //SDL_Delay(5000);
 }
