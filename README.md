@@ -32,7 +32,7 @@ Now, I'll send ($5B -  4E = 0D$, this char can be sent by pressing enter) in ord
 
 Step into the next call (<a name="func2">func2</a>):
 ![second func](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img3.png)
-There is comparison of [si] and [di]. And [di](#saving adr) is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
+There is comparison of [si] and [di]. And [di](#saving_adr) is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
 
 This function handles <a name="bx_setting"> two cases </a>:
 1. Buffer ds:[si] == ds:[di] -> return bx equal 0FFFFh
