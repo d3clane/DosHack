@@ -34,7 +34,7 @@ int Crack(FILE* crackFile)
 {
     assert(crackFile);
 
-    static const int NOP = 144;
+    static const int NOP = 0x90;
 
     int okStatus = fseek(crackFile, 0x55L, SEEK_SET);
     if (okStatus == -1)  return 0;
