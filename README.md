@@ -6,7 +6,7 @@ The main goal of this project is to learn basics of hacking and reverse engineer
 
 I receive program from [Worthlane](https://github.com/worthlane) (only .com file) which emulates password checking and then providing some important data. 
 
-Work is divided into two parts:
+The work is divided into two parts:
 1. I have to find 2 software vulnerabilities and exploit them without changing source code.
 2. Write a program on C-language that will change source code and provide me an access to an important data (it is kind of crack).
 
@@ -15,7 +15,7 @@ Used software:
 - Qview to see asm code without debugging
 - C language to write crack program
 
-## Finding first vulnerability (CIPHER)
+## Finding the first vulnerability (CIPHER)
 
 I'm going to pay special attention to registers si and di because they are often used for buffer loading and printing (used in special commands like stosb, loadsb, etc.)
 
@@ -55,7 +55,7 @@ Let's try it:
 I passed the verification and now have the access to the important data.
 
 
-## Finding second vulnerability (buffer overflow)
+## Finding the second vulnerability (buffer overflow)
 [As I already mentioned](#overflow_suggest), there is no buffer size checking, so I can overflow it. Looking through the code I found out that there is no addressing beyond the 03A3h, so I can overflow it without ruining program code. All I need to do is to get to the stack and change the return address so that program will return to the part of the code where access is granted, bypassing the validation steps.
 
 So, first of all, I need to find address where to return. I'll enter an invalid password and check which compare leads to denied permission. 
