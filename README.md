@@ -4,11 +4,11 @@
 
 The main goal of this project is to learn basics of hacking and reverse engineering.
 
-I recieve program from [Worthlane](https://github.com/worthlane) (only .com file) that emulate password checking and then providing some important data. 
+I recieve program from [Worthlane](https://github.com/worthlane) (only .com file) which emulates password checking and then providing some important data. 
 
 Work is divided into two parts:
 1. I have to find 2 software vulnerabilities and exploit them without changing source code.
-2. Write a program on C-language that will change source code and provide me an access to important data (it is king of crack).
+2. Write a program on C-language that will change source code and provide me an access to an important data (it is kind of crack).
 
 Used software:
 - Turbo debugger in order to understand how the program works
@@ -28,16 +28,16 @@ Main body of the program is calling three different functions before terminating
 
 ![first func](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img2.png)
 I'm sending 'P' letter to the input (it's equals to 50h in ASCII-code). Easy to see that program adds 4Eh to my ASCII-code and save it in ds:[di], which equals ds:[03A3], after that it increases di. Also, as I can see program does not check how many chars I have already sent to the input, which suggests that I can try to overflow bufer from ds:[di] and change some data in code.
-Now, I'll send ($5B -  4E = 0D$, it's sent by enter) in order to end this function on move to the next one.
+Now, I'll send ($5B -  4E = 0D$, it's sent by enter) in order to end this function and move on to the next one.
 
 Step into the next call:
 ![second func](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img3.png)
-In the first three line there is comparison of [si] and [di]. And di is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
+There is comparison of [si] and [di]. And di is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
 
 This function handles two cases:
 1. Buffer ds:[si] == ds:[di] -> return bx equal 0FFFFh
 2. Buffer ds:[si] != ds:[di] -> set bx to 0000h and return.
-Maybe, this info will help in the future.
+Maybe, this info will help me in the future.
 
 Let's checkout 0399h and 03A3h:
 ![buffers](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img4.png)
@@ -56,7 +56,7 @@ I passed the verification and now have the access to the important data.
 
 
 ## Finding second vulnerability (buffer overflow)
-As I already mentioned, there is no buffer size checking, so I can overflow it. Looking through the code I found out that there is no addression beyond the 03A3h, so I can overflow it without ruining program code. All I need is to get to the stack and change return address to the part of the code where access is granted bypassing the verification stages.
+As I already mentioned, there is no buffer size checking, so I can overflow it. Looking through the code I found out that there is no addression beyond the 03A3h, so I can overflow it without ruining program code. All I need to do is to get to the stack and change the return address so that I will return to the part of the code where access is granted, bypassing the validation steps.
 
 So, first of all, I need to find address where to return. I'll enter an invalid password and check which compare leads to denied permission. 
 
@@ -72,17 +72,17 @@ Genereting this [byte sequence](/assets/InFiles/input) with [code](/Src/Overflow
 ## Cracking
 Cracking is pretty simple - all I need is to give me right permission all the time. There can be different ways of doing this:
 - I can delete all reading password functions and also delete denying part (change them to nop)
-- Replace func call before comparing bx and FFFFh with mov bx, FFFFh (change call 142h on mov bx, FFFh) ![call](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img7.png)
-- Delete setting mov to 0 in func2 ![setting to 0](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img3.png)
+- Replace func call before comparison of bx and FFFFh with mov bx, FFFFh (change call 142h on mov bx, FFFh) ![call](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img7.png)
+- Delete setting bx to 0 in func2 ![setting to 0](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img3.png)
 
 I'll take option 3 - in my opinion it's better to not to delete some function calls because in real life cases they could be called more than once (I can forget to delete one of them) or can do more that just checking the password. So it's preferebly to change function2. Let's do it. 
 
-Code, that I would like to delete start at byte 55 and ends at byte 58 as I can see in Qview:
+Code, that I would like to delete starts at byte 55 and ends at byte 58 as I can see in Qview:
 ![Qview](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img9.png)
 All I need is to change these bytes to 3 nops with this [code](/Src/Crack/Crack.cpp). Result:
 ![Cracked](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img10.png)
 
-Now, I would like to add some fun stuff using SDL graphics lib. I'll add popular meme 'Vzlob kazino'. This is the result:
+Now, I would like to add some fun stuff using SDL graphics lib. I'll add popular meme 'Vzlom kazino'. This is the result:
 ![Vzlom](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img11.png)
 
 
