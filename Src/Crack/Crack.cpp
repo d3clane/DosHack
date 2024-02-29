@@ -75,19 +75,19 @@ void ShowScreen()
 
     SDL_BlitSurface(tree, NULL, window_surface, NULL);
 
-    SDL_Rect linepos;
-    linepos.x = 0;
-    linepos.y = 0;
+    SDL_Rect linePos;
+    linePos.x = 0;
+    linePos.y = 0;
 
     SDL_Event event;
     SDL_PollEvent(&event);
 
     for (size_t i = 0; i < 160ul; ++i)
     {
-        SDL_BlitSurface(line, NULL, window_surface, &linepos);
+        SDL_BlitSurface(line, NULL, window_surface, &linePos);
 
         SDL_UpdateWindowSurface(window);
-        linepos.x += 1;
+        linePos.x += 1;
 
         
         SDL_Delay((rand() % 80) + 20);
@@ -95,10 +95,10 @@ void ShowScreen()
 
     for (size_t i = 0; i < 50ul; ++i)
     {
-        SDL_BlitSurface(line, NULL, window_surface, &linepos);
+        SDL_BlitSurface(line, NULL, window_surface, &linePos);
 
         SDL_UpdateWindowSurface(window);
-        linepos.x += 1;
+        linePos.x += 1;
 
         SDL_Delay((rand() % 150) + 150);
     }
