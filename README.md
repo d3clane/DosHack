@@ -27,21 +27,21 @@ Firstly, I want to check the program for the most obvious vulnerability: maybe c
 Main body of the program is calling three different functions before terminating the program: ![three calls](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img1.png) Let's step in the first one.
 
 ![first func](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img2.png)
-I'm sending 'P' letter to the input (it's equals to 50h in ASCII-code). Easy to see that program adds 4Eh to my ASCII-code and save it in ds:[di], which equals ds:[03A3], after that it increases di. Also, as I can see program does not check how many chars I have already sent to the input, which suggests that I can try to overflow bufer from ds:[di] and change some data in code.
-Now, I'll send ($5B -  4E = 0D$, it's sent by enter) in order to end this function and move on to the next one.
+I'm sending 'P' letter to the input (it's equals to 50h in ASCII-code). Easy to see that <a name="cipher shift">program adds 4Eh to my ASCII-code</a> and <a name="saving adr">save it in ds:[di]</a>, which equals ds:[03A3], after that it increases di. Also, as I can see program doesn't check how many chars I have already sent to the input, which suggests that I can try to overflow bufer from ds:[di] and change some data in code.
+Now, I'll send ($5B -  4E = 0D$, this char can be sent by pressing enter) in order to end this function and move on to the next one.
 
 Step into the next call:
 ![second func](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img3.png)
-There is comparison of [si] and [di]. And di is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
+There is comparison of [si] and [di]. And [di](#saving adr) is exactly the place in which my input letters where sent. So, my suggestion is that [si] may contain correct password. Si equal to 0399h. 
 
-This function handles two cases:
+This function handles <a name="bx setting"> two cases </a>:
 1. Buffer ds:[si] == ds:[di] -> return bx equal 0FFFFh
 2. Buffer ds:[si] != ds:[di] -> set bx to 0000h and return.
 Maybe, this info will help me in the future.
 
 Let's checkout 0399h and 03A3h:
 ![buffers](https://github.com/d3clane/DosHack/blob/main/assets/imgs/img4.png)
-$Value [03A3h] = 9E = 4E + 50h = 4E + 'P'$. It's exactly what I have sent. 
+Value [03A3h] = 9E = [4E](#cipher shift) + 50h = 4E + 'P'. It's exactly what I have sent. 
 So, chars from 0399h to 03A3h are: 
 - BB BD B2 B3 88 B2 B3 B9 BD 5B. 
 Decoding it, knowing that there's a 4E shift:
