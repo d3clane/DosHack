@@ -89,7 +89,6 @@ void ShowScreen()
         SDL_UpdateWindowSurface(window);
         linePos.x += 1;
 
-        
         SDL_Delay((rand() % 80) + 20);
     }
 
@@ -103,11 +102,5 @@ void ShowScreen()
         SDL_Delay((rand() % 150) + 150);
     }
 
-    //SDL_Event event;
-    //SDL_PollEvent(&event);
-
-
     SDL_UpdateWindowSurface(window);
-
-    //SDL_Delay(5000);
 }
