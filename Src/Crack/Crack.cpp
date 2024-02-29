@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 int Crack(FILE* crackFile);
+void ShowScreen();
 
 int main(const int argc, const char* argv[])
 {
@@ -22,6 +23,8 @@ int main(const int argc, const char* argv[])
 
     if (Crack(crackFile) == 0)
         return -1;
+        
+    ShowScreen();
 
     fclose(crackFile);
 }
@@ -47,4 +50,31 @@ int Crack(FILE* crackFile)
     return 1;
 }
 
+void ShowScreen()
+{
+    static const size_t width  = 512;
+    static const size_t height = 211;
 
+    SDL_Init(SDL_INIT_EVERYTHING);
+    SDL_Window* window = SDL_CreateWindow("Casino", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+                                          width, height, SDL_WINDOW_SHOWN);
+
+    SDL_Surface* tree  = SDL_LoadBMP("SDLAssets/imgs/Vzlom.bmp");
+
+    if (!tree || !window)
+        return;
+
+    SDL_Surface *window_surface = SDL_GetWindowSurface(window);
+
+    if (!window_surface)
+        return;
+
+    SDL_BlitSurface(tree, NULL, window_surface, NULL);
+
+    SDL_Event event;
+    SDL_PollEvent(&event);
+
+    SDL_UpdateWindowSurface(window);
+
+    SDL_Delay(5000);
+}

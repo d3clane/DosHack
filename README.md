@@ -82,7 +82,8 @@ Code, that I would like to delete start at byte 55 and ends at byte 58 as I can 
 All I need is to change these bytes to 3 nops with this [code](/Src/Crack/Crack.cpp). Result:
 ![Cracked](/assets/imgs/img10.png)
 
-Now, I would like to add some fun stuff using SDL graphic lib. I'll add popular meme 'Vzlob kazino'.
+Now, I would like to add some fun stuff using SDL graphics lib. I'll add popular meme 'Vzlob kazino'. This is the result:
+![Vzlom](/assets/imgs/img11.png)
 
 
 
