@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "stackoverflow": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/opt/homebrew/bin/g++-13"
 }
